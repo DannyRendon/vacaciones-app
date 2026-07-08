@@ -10,6 +10,7 @@ class Usuario(Base):
     nombre = Column(String, nullable=False)
     correo = Column(String, unique=True, nullable=False)
     rol = Column(String, nullable=False)  # empleado, jefe, rrhh
+    dias_disponibles = Column(Integer, nullable=False, default=15)  # saldo de vacaciones (15 días hábiles/año en Colombia)
 
     solicitudes = relationship("Solicitud", back_populates="empleado")
 

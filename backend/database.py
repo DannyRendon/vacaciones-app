@@ -2,8 +2,17 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# Conexión a la base de datos local
-DATABASE_URL = "postgresql://postgres:DannyRc@localhost:5432/vacaciones_db"
+import os
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+# En producción (Render) esta variable la inyecta el servicio automáticamente.
+# En local, si no existe, usa la conexión de siempre como respaldo.
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://postgres:DannyRc@localhost:5432/vacaciones_db"
+)
 
 engine = create_engine(DATABASE_URL)
 

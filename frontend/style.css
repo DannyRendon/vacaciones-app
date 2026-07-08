@@ -240,4 +240,32 @@ button:hover {
     padding: 20px 0;
 }
 
+/* Saldo de días */
+.saldo-dias {
+    background: linear-gradient(135deg, #2c3e50, #4a6580);
+    color: white;
+}
+
+.saldo-dias h3 {
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.saldo-dias p {
+    font-size: 24px;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.saldo-ok {
+    color: #0a3622;
+}
+
+.saldo-bajo {
+    color: #842029;
+    font-weight: 700;
+}
+
 .oculto { display: none !important; }

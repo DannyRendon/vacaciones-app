@@ -20,6 +20,15 @@ def crear_solicitud(
     if dias <= 0:
         raise HTTPException(status_code=400, detail="La fecha fin debe ser mayor a la fecha inicio")
 
+    empleado = db.query(models.Usuario).filter(models.Usuario.id == empleado_id).first()
+    if not empleado:
+        raise HTTPException(status_code=404, detail="Empleado no encontrado")
+    if dias > empleado.dias_disponibles:
+        raise HTTPException(
+            status_code=400,
+            detail=f"No tienes suficientes días disponibles (te quedan {empleado.dias_disponibles})"
+        )
+
     solicitud = models.Solicitud(
         empleado_id=empleado_id,
         fecha_inicio=fecha_inicio,
@@ -84,6 +93,15 @@ def decision_rrhh(
         raise HTTPException(status_code=400, detail="Esta solicitud no está pendiente de RRHH")
 
     if decision == "confirmar":
+        # Se revalida el saldo aquí (no solo al crear la solicitud), porque puede
+        # haber cambiado si RRHH ya confirmó otras solicitudes del mismo empleado.
+        empleado = db.query(models.Usuario).filter(models.Usuario.id == solicitud.empleado_id).first()
+        if solicitud.dias_solicitados > empleado.dias_disponibles:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Saldo insuficiente: el empleado solo tiene {empleado.dias_disponibles} días disponibles"
+            )
+        empleado.dias_disponibles -= solicitud.dias_solicitados
         solicitud.estado = "confirmada"
     elif decision == "rechazar":
         solicitud.estado = "rechazada_rrhh"
