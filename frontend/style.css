@@ -1,0 +1,243 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* Login */
+#pantalla-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f0f2f5;
+    z-index: 10;
+}
+
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 380px;
+}
+
+.login-card h1 {
+    font-size: 22px;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.login-card p {
+    color: #777;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+/* Header */
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 14px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.header-izq h2 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.header-der {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-der span {
+    font-size: 14px;
+    color: #ccc;
+}
+
+/* Main */
+main {
+    max-width: 860px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.seccion {
+    margin-bottom: 30px;
+}
+
+.seccion h3 {
+    font-size: 16px;
+    color: #2c3e50;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+/* Formulario */
+.formulario {
+    background: white;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr auto;
+    gap: 12px;
+    align-items: end;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Inputs */
+input, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    font-size: 14px;
+    color: #333;
+    transition: border 0.2s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* Botones */
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+    white-space: nowrap;
+}
+
+.btn-salir {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+.btn-aprobar {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.btn-rechazar {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-confirmar {
+    background-color: #2ecc71;
+    color: white;
+}
+
+/* Tarjetas */
+.tarjeta {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 14px;
+    border-left: 5px solid #ddd;
+}
+
+.tarjeta.pendiente_jefe { border-left-color: #f39c12; }
+.tarjeta.pendiente_rrhh { border-left-color: #3498db; }
+.tarjeta.confirmada { border-left-color: #2ecc71; }
+.tarjeta.rechazada_jefe { border-left-color: #e74c3c; }
+.tarjeta.rechazada_rrhh { border-left-color: #e74c3c; }
+
+.tarjeta h4 {
+    font-size: 15px;
+    color: #2c3e50;
+    margin-bottom: 6px;
+}
+
+.tarjeta p {
+    font-size: 13px;
+    color: #666;
+    margin: 4px 0;
+}
+
+.tarjeta .acciones {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.tarjeta .acciones input {
+    flex: 1;
+    margin: 0;
+}
+
+/* Badge de estado */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 6px;
+}
+
+.badge.pendiente_jefe { background: #fff3cd; color: #856404; }
+.badge.pendiente_rrhh { background: #cfe2ff; color: #084298; }
+.badge.confirmada { background: #d1e7dd; color: #0a3622; }
+.badge.rechazada_jefe, .badge.rechazada_rrhh { background: #f8d7da; color: #842029; }
+
+.sin-datos {
+    color: #999;
+    font-size: 14px;
+    padding: 20px 0;
+}
+
+.oculto { display: none !important; }

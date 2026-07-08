@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Vacaciones</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Login -->
+    <div id="pantalla-login">
+        <div class="login-card">
+            <h1>🗓️ Sistema de Vacaciones</h1>
+            <p>Selecciona tu usuario para continuar</p>
+            <select id="selector-usuario">
+                <option value="">-- Selecciona un usuario --</option>
+            </select>
+            <button onclick="entrar()">Entrar</button>
+        </div>
+    </div>
+
+    <!-- Panel principal -->
+    <div id="panel-principal" class="oculto">
+        <header>
+            <div class="header-izq">
+                <h2>🗓️ Sistema de Vacaciones</h2>
+            </div>
+            <div class="header-der">
+                <span id="saludo"></span>
+                <button class="btn-salir" onclick="cerrarSesion()">Cerrar sesión</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Vista empleado -->
+            <div id="vista-empleado" class="oculto">
+                <div class="seccion">
+                    <h3>Nueva solicitud</h3>
+                    <div class="formulario">
+                        <div class="campo">
+                            <label>Fecha inicio</label>
+                            <input type="date" id="fecha-inicio">
+                        </div>
+                        <div class="campo">
+                            <label>Fecha fin</label>
+                            <input type="date" id="fecha-fin">
+                        </div>
+                        <div class="campo">
+                            <label>Motivo</label>
+                            <input type="text" id="motivo" placeholder="Ej: Vacaciones familiares">
+                        </div>
+                        <button class="btn-primary" onclick="crearSolicitud()">Enviar solicitud</button>
+                    </div>
+                </div>
+                <div class="seccion">
+                    <h3>Mis solicitudes</h3>
+                    <div id="lista-solicitudes-empleado"></div>
+                </div>
+            </div>
+
+            <!-- Vista jefe -->
+            <div id="vista-jefe" class="oculto">
+                <div class="seccion">
+                    <h3>Solicitudes pendientes de aprobación</h3>
+                    <div id="lista-solicitudes-jefe"></div>
+                </div>
+            </div>
+
+            <!-- Vista RRHH -->
+            <div id="vista-rrhh" class="oculto">
+                <div class="seccion">
+                    <h3>Solicitudes aprobadas por el jefe</h3>
+                    <div id="lista-solicitudes-rrhh"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
