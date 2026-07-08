@@ -1,4 +1,7 @@
-const API = "http://localhost:8000";
+// En local usa el backend local; en producción usa el backend desplegado en Render.
+const API = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:8000"
+    : "https://vacaciones-backend-3frq.onrender.com";
 let usuarioActual = null;
 
 // Cargar usuarios al iniciar
