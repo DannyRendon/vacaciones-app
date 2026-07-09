@@ -11,6 +11,7 @@ class Usuario(Base):
     correo = Column(String, unique=True, nullable=False)
     rol = Column(String, nullable=False)  # empleado, jefe, rrhh
     dias_disponibles = Column(Integer, nullable=False, default=15)  # saldo de vacaciones (15 días hábiles/año en Colombia)
+    jefe_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)  # solo aplica a empleados; indica quién es su jefe
 
     solicitudes = relationship("Solicitud", back_populates="empleado")
 

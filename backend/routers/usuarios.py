@@ -13,13 +13,18 @@ def listar_usuarios(db: Session = Depends(obtener_db)):
 
 # Crear un usuario nuevo
 @router.post("/")
-def crear_usuario(nombre: str, correo: str, rol: str, db: Session = Depends(obtener_db)):
-    # Verificar que el correo no exista
+def crear_usuario(
+    nombre: str,
+    correo: str,
+    rol: str,
+    jefe_id: int = None,
+    db: Session = Depends(obtener_db)
+):
     existe = db.query(models.Usuario).filter(models.Usuario.correo == correo).first()
     if existe:
         raise HTTPException(status_code=400, detail="Este correo ya está registrado")
-    
-    nuevo = models.Usuario(nombre=nombre, correo=correo, rol=rol)
+
+    nuevo = models.Usuario(nombre=nombre, correo=correo, rol=rol, jefe_id=jefe_id)
     db.add(nuevo)
     db.commit()
     db.refresh(nuevo)
@@ -31,4 +36,15 @@ def obtener_usuario(usuario_id: int, db: Session = Depends(obtener_db)):
     usuario = db.query(models.Usuario).filter(models.Usuario.id == usuario_id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return usuario
+
+# Asignar o cambiar el jefe de un empleado
+@router.put("/{usuario_id}/jefe")
+def asignar_jefe(usuario_id: int, jefe_id: int, db: Session = Depends(obtener_db)):
+    usuario = db.query(models.Usuario).filter(models.Usuario.id == usuario_id).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    usuario.jefe_id = jefe_id
+    db.commit()
+    db.refresh(usuario)
     return usuario

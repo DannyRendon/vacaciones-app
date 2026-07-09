@@ -1,4 +1,3 @@
-// En local usa el backend local; en producción usa el backend desplegado en Render.
 const API = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
     ? "http://localhost:8000"
     : "https://vacaciones-backend-3frq.onrender.com";
@@ -16,7 +15,6 @@ async function cargarUsuarios() {
         selector.appendChild(option);
     });
 
-    // Si hay usuario en la URL, entrar automático
     const idEnUrl = window.location.hash.replace("#", "");
     if (idEnUrl) {
         selector.value = idEnUrl;
@@ -32,7 +30,6 @@ async function entrar() {
     const res = await fetch(`${API}/usuarios/${id}`);
     usuarioActual = await res.json();
 
-    // Guardar en URL para que persista al recargar
     window.location.hash = usuarioActual.id;
 
     document.getElementById("pantalla-login").classList.add("oculto");
@@ -58,7 +55,7 @@ function cerrarSesion() {
     location.reload();
 }
 
-// Mostrar el saldo de días disponibles del empleado
+// Mostrar saldo de días del empleado
 async function mostrarSaldoEmpleado() {
     const res = await fetch(`${API}/usuarios/${usuarioActual.id}`);
     const usuario = await res.json();
@@ -73,6 +70,7 @@ async function crearSolicitud() {
     const motivo = document.getElementById("motivo").value;
 
     if (!inicio || !fin || !motivo) return alert("Completa todos los campos");
+    if (fin < inicio) return alert("La fecha fin no puede ser menor que la fecha inicio");
 
     const res = await fetch(`${API}/solicitudes/?empleado_id=${usuarioActual.id}&fecha_inicio=${inicio}&fecha_fin=${fin}&motivo=${motivo}`, {
         method: "POST"
@@ -80,6 +78,7 @@ async function crearSolicitud() {
 
     if (res.ok) {
         alert("Solicitud enviada correctamente");
+        mostrarSaldoEmpleado();
         cargarSolicitudesEmpleado();
     } else {
         const error = await res.json();
@@ -103,7 +102,7 @@ async function cargarSolicitudesEmpleado() {
         contenedor.innerHTML += `
             <div class="tarjeta ${s.estado}">
                 <h4>${s.motivo}</h4>
-                <p>📅 ${s.fecha_inicio} → ${s.fecha_fin} (${s.dias_solicitados} días)</p>
+                <p>📅 ${s.fecha_inicio} → ${s.fecha_fin} (${s.dias_solicitados} ${s.dias_solicitados === 1 ? "día" : "días"})</p>
                 <span class="badge ${s.estado}">${s.estado.replace(/_/g, " ")}</span>
                 ${s.comentario_jefe ? `<p>💬 Jefe: ${s.comentario_jefe}</p>` : ""}
                 ${s.comentario_rrhh ? `<p>💬 RRHH: ${s.comentario_rrhh}</p>` : ""}
@@ -114,23 +113,29 @@ async function cargarSolicitudesEmpleado() {
 
 // Ver solicitudes pendientes para el jefe
 async function cargarSolicitudesJefe() {
-    const res = await fetch(`${API}/solicitudes/`);
-    const todas = await res.json();
-    const pendientes = todas.filter(s => s.estado === "pendiente_jefe");
+    const res = await fetch(`${API}/solicitudes/jefe/${usuarioActual.id}`);
+    const delEquipo = await res.json();
+    const pendientes = delEquipo.filter(s => s.estado === "pendiente_jefe");
     const contenedor = document.getElementById("lista-solicitudes-jefe");
     contenedor.innerHTML = "";
 
     if (pendientes.length === 0) {
-        contenedor.innerHTML = "<p class='sin-datos'>No hay solicitudes pendientes.</p>";
+        contenedor.innerHTML = "<p class='sin-datos'>No hay solicitudes pendientes de tu equipo.</p>";
         return;
     }
 
-    pendientes.forEach(s => {
+    for (const s of pendientes) {
+        const resEmpleado = await fetch(`${API}/usuarios/${s.empleado_id}`);
+        const empleado = await resEmpleado.json();
+
         contenedor.innerHTML += `
-            <div class="tarjeta pendiente_jefe">
-                <h4>Solicitud #${s.id} — Empleado: ${s.empleado_id}</h4>
-                <p>📅 ${s.fecha_inicio} → ${s.fecha_fin} (${s.dias_solicitados} días)</p>
+            <div class="tarjeta pendiente_jefe" id="tarjeta-${s.id}">
+                <h4>Solicitud #${s.id} — ${empleado.nombre}</h4>
+                <p>📅 ${s.fecha_inicio} → ${s.fecha_fin} (${s.dias_solicitados} ${s.dias_solicitados === 1 ? "día" : "días"})</p>
                 <p>📝 ${s.motivo}</p>
+                <div class="resumen-ia" id="resumen-${s.id}">
+                    <button class="btn-ia" onclick="cargarResumenJefe(${s.id})">🤖 Ver análisis IA</button>
+                </div>
                 <div class="acciones">
                     <input type="text" id="comentario-jefe-${s.id}" placeholder="Comentario (opcional)">
                     <button class="btn-aprobar" onclick="decidirJefe(${s.id}, 'aprobar')">Aprobar</button>
@@ -138,7 +143,23 @@ async function cargarSolicitudesJefe() {
                 </div>
             </div>
         `;
-    });
+    }
+}
+
+// Cargar resumen de IA para el jefe
+async function cargarResumenJefe(id) {
+    const contenedor = document.getElementById(`resumen-${id}`);
+    contenedor.innerHTML = "<p class='cargando-ia'>🤖 Analizando solicitud...</p>";
+
+    const res = await fetch(`${API}/solicitudes/${id}/resumen-jefe`);
+    const data = await res.json();
+
+    contenedor.innerHTML = `
+        <div class="caja-ia">
+            <span class="ia-label">🤖 Análisis IA</span>
+            <p>${data.resumen}</p>
+        </div>
+    `;
 }
 
 // Jefe toma decisión
@@ -175,13 +196,17 @@ async function cargarSolicitudesRrhh() {
         contenedor.innerHTML += `
             <div class="tarjeta pendiente_rrhh">
                 <h4>Solicitud #${s.id} — ${empleado.nombre}</h4>
-                <p>📅 ${s.fecha_inicio} → ${s.fecha_fin} (${s.dias_solicitados} días)</p>
+                <p>📅 ${s.fecha_inicio} → ${s.fecha_fin} (${s.dias_solicitados} ${s.dias_solicitados === 1 ? "día" : "días"})</p>
                 <p>📝 ${s.motivo}</p>
                 <p class="${alcanza ? "saldo-ok" : "saldo-bajo"}">
                     Saldo del empleado: ${empleado.dias_disponibles} días
                     ${alcanza ? "" : "⚠️ insuficiente para esta solicitud"}
                 </p>
                 ${s.comentario_jefe ? `<p>💬 Jefe: ${s.comentario_jefe}</p>` : ""}
+                <div class="sugerencia-ia" id="sugerencia-${s.id}">
+                    <button class="btn-ia" onclick="cargarSugerenciaRrhh(${s.id}, 'confirmar')">🤖 Sugerencia para confirmar</button>
+                    <button class="btn-ia" onclick="cargarSugerenciaRrhh(${s.id}, 'rechazar')">🤖 Sugerencia para rechazar</button>
+                </div>
                 <div class="acciones">
                     <input type="text" id="comentario-rrhh-${s.id}" placeholder="Comentario (opcional)">
                     <button class="btn-aprobar" onclick="decidirRrhh(${s.id}, 'confirmar')">Confirmar</button>
@@ -190,6 +215,23 @@ async function cargarSolicitudesRrhh() {
             </div>
         `;
     }
+}
+
+// Cargar sugerencia de IA para RRHH
+async function cargarSugerenciaRrhh(id, decision) {
+    const contenedor = document.getElementById(`sugerencia-${id}`);
+    contenedor.innerHTML = "<p class='cargando-ia'>🤖 Generando sugerencia...</p>";
+
+    const res = await fetch(`${API}/solicitudes/${id}/sugerencia-rrhh?decision=${decision}`);
+    const data = await res.json();
+
+    document.getElementById(`comentario-rrhh-${id}`).value = data.sugerencia;
+
+    contenedor.innerHTML = `
+        <div class="caja-ia">
+            <span class="ia-label">🤖 Sugerencia IA — puedes editarla antes de enviar</span>
+        </div>
+    `;
 }
 
 // RRHH toma decisión
