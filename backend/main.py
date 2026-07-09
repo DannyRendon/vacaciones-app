@@ -5,6 +5,8 @@ import models
 from routers import usuarios, solicitudes
 
 # Crear las tablas en la base de datos al arrancar
+
+Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Sistema de Vacaciones")
