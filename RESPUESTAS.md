@@ -78,7 +78,7 @@ Agregaría notificaciones por correo cuando cambie el estado de una solicitud, p
 
 ### 9. ¿Cuánto tiempo real te tomó? (Y si usaste IA, aproximadamente qué porcentaje hizo ella)
 
-Empecé alrededor de la 1:00 p.m. y terminé cerca de la medianoche del mismo día, aunque el envío lo hago hasta la mañana siguiente. En total le dediqué cerca de 11 horas seguidas, contando desde estructurar el proyecto hasta dejarlo desplegado, probado y con este documento de respuestas listo.
+Empecé alrededor de la 1:00 p.m. y terminé cerca de la medianoche del mismo día, aunque en la mañana de hoy hice algunos arreglos. En total le dediqué cerca de 11 horas seguidas, contando desde estructurar el proyecto hasta dejarlo desplegado, probado y con este documento de respuestas listo.
 
 En cuanto al reparto del trabajo, calculo que un 70% fue mío y un 30% de la IA. La IA me ayudó a escribir código más rápido y a depurar errores, pero no siempre entendía bien el contexto completo de lo que ya tenía construido, así que me tocó revisar, corregir y varias veces rehacer sus propuestas. Las decisiones de qué construir, cómo validar el flujo, y qué hacer cuando algo no cuadraba, las tomé yo en cada paso.
 

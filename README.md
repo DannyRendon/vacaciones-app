@@ -7,7 +7,7 @@ Una mini-aplicación para ordenar el proceso de solicitud de vacaciones en una e
 - **App:** https://vacaciones-app-three.vercel.app
 - **API (docs interactivos):** https://vacaciones-backend-3frq.onrender.com/docs
 
-> El backend está en el plan gratis de Render, así que si nadie lo usa por 15 minutos "se duerme". La primera petición puede tardar 30-60 segundos mientras despierta — es normal.
+> El backend está en el plan gratis de Render, así que si nadie lo usa por 15 minutos "se duerme". La primera petición puede tardar 30-60 segundos mientras despierta es normal.
 
 ---
 
@@ -56,9 +56,9 @@ Cada paso tiene un estado claro:
 
 ---
 
-## Lógica de días (contexto colombiano)
+## Lógica de días 
 
-En Colombia los trabajadores tienen 15 días hábiles de vacaciones por año. Cada usuario empieza con ese saldo. El sistema descuenta los días cuando RRHH confirma la solicitud — no antes, porque hasta ese momento no es oficial.
+En Colombia los trabajadores tienen 15 días hábiles de vacaciones por año. Cada usuario empieza con ese saldo. El sistema descuenta los días cuando RRHH confirma la solicitud no antes, porque hasta ese momento no es oficial.
 
 Se valida dos veces:
 1. Cuando el empleado crea la solicitud (para no dejar pasar algo imposible desde el inicio)
@@ -79,7 +79,7 @@ Cuando el jefe va a aprobar o rechazar una solicitud, puede pedir un análisis a
 Cuando RRHH va a confirmar o rechazar, puede pedir una sugerencia de comentario profesional según la decisión que va a tomar. La sugerencia se pone en el campo de comentario pero RRHH puede editarla antes de enviar.
 
 **Por qué aquí y no en otro lugar:**
-Estos son los dos puntos donde alguien tiene que tomar una decisión y un poco de contexto adicional ayuda. La IA no toma ninguna decisión — solo informa y sugiere. Los cálculos de saldo, estados y aprobaciones siguen siendo 100% determinísticos en el backend.
+Estos son los dos puntos donde alguien tiene que tomar una decisión y un poco de contexto adicional ayuda. La IA no toma ninguna decisión  solo informa y sugiere. Los cálculos de saldo, estados y aprobaciones siguen siendo 100% determinísticos en el backend.
 
 ---
 
@@ -182,7 +182,10 @@ DATABASE_URL = "postgresql://postgres:TU_CONTRASEÑA@localhost:5432/vacaciones_d
 
 **4. Configurar la API key de Groq**
 
-En `ia.py` reemplaza `TU_API_KEY_AQUI` con tu key de Groq (gratis en groq.com).
+Crea un archivo `backend/.env` con este contenido (reemplaza con tu key real, gratis en groq.com):
+```
+GROQ_API_KEY=tu_key_aqui
+```
 
 **5. Correr el backend**
 ```bash
@@ -210,7 +213,7 @@ Usé Claude y Cursor principalmente. Claude me ayudó a planear la estructura, d
 
 Hubo varios momentos donde tuve que intervenir yo: el entorno virtual de Python se creó con carpeta `bin` en vez de `Scripts` porque tenía varios intérpretes instalados en Windows, y eso lo tuve que depurar yo en la terminal. También hubo un problema con el CSS donde el login con `position: fixed` tapaba el panel al entrar, y lo resolví revisando el comportamiento en el navegador. Otro caso fue que Groq descontinuó el modelo `llama3-8b-8192` y tuve que identificar el error en los logs y cambiar al modelo actualizado.
 
-En general usé la IA como un par de programación, no como alguien que hace todo solo — las decisiones de arquitectura, qué validar y cómo estructurar el flujo las tomé yo.
+En general usé la IA como un par de programación, no como alguien que hace todo solo las decisiones de arquitectura, qué validar y cómo estructurar el flujo las tomé yo.
 
 ---
 
